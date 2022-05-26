@@ -2,3 +2,5 @@
 /.idea/
 /venv/
 .env
+/pg_db.log
+/__pycache__/

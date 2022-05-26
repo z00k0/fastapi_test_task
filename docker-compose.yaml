@@ -1,8 +1,21 @@
 version: "3.9"
 
+volumes:
+  postgresdata: {}
+
 services:
   redis:
     image: "redis:7.0.0-alpine"
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --requirepass ${REDIS_PASSWORD} --loglevel warning
+  db:
+    image: "postgres:14.3-alpine"
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
