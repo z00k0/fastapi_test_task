@@ -170,3 +170,18 @@ async def endpoint_delete(endpoint_id: int):
     await db.execute(query)
 
     return {'message': f'Endpoint with id: {endpoint_id} deleted successfully.'}
+
+
+@app.get('/devices/select/')
+async def devices_select():
+    sub_query = sa.select([devices.c.id]).join(endpoints, devices.c.id == endpoints.c.device_id).subquery()
+    query = sa.select(devices.c.dev_type, sa.func.count(devices.c.dev_type).label('count')).filter(devices.c.id.not_in(sub_query)).group_by(devices.c.dev_type)
+    dev_select = await db.fetch_all(query)
+
+    resp = []
+    for row in dev_select:
+        logging.info(f'{row._mapping=}')
+        _dev_type = row._mapping['dev_type']
+        _count = row._mapping['count']
+        resp.append({'dev_type': _dev_type, 'count': _count})
+    return resp
