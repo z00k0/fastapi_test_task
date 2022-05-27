@@ -1,7 +1,6 @@
-# fastapi_test_task
-Test task with FastAPI, aioredis, aiopg
+# Test task with FastAPI, aioredis, aiopg
 
-Тестовое задание (стек fastapi, aioredis, aiopg, sqlalchemy)
+# Тестовое задание (стек fastapi, aioredis, aiopg, sqlalchemy)
 
 Тестовое приложение должно подключатся к PostgreSQL и Redis и реализовать
 следующие API:
@@ -17,3 +16,14 @@ Test task with FastAPI, aioredis, aiopg
 4. В базе данных получить список всех устройств, которые не привязаны к endpoint. Вернуть количество, сгруппированное по типам устройств.
 
 GET запрос к /devices/select/ выдает JSON, согласно заданию
+
+
+Для запуска проекта:
+
+`git clone git@github.com:z00k0/fastapi_test_task.git`
+
+`docker-compose build`
+
+`docker-compose up -d`
+
+Приложение доступно по адресу [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

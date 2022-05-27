@@ -9,7 +9,7 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --requirepass ${REDIS_PASSWORD} --loglevel warning
-  db:
+  postgres:
     image: "postgres:14.3-alpine"
     volumes:
       - postgresdata:/var/lib/postgresql/data
@@ -19,3 +19,19 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  web:
+    build: .
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - LOGGING_LEVEL=${LOGGING_LEVEL}
+    depends_on:
+      - redis
+      - postgres
