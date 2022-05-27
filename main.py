@@ -6,9 +6,6 @@ import sqlalchemy as sa
 from databases import Database
 from fastapi import FastAPI, Depends, Body, status
 from dotenv import load_dotenv
-
-from sqlalchemy.orm import sessionmaker, Session
-
 from aiopg.sa import create_engine
 
 from pg_db import create_db, fill_devices, fill_endpoints
@@ -23,7 +20,15 @@ POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_SERVER = os.getenv('POSTGRES_SERVER')
 
-DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}'
+# Configure logging
+logging.basicConfig(
+    level=os.getenv('LOGGING_LEVEL', 'DEBUG'),
+    filename='pg_db.log',
+    format='%(asctime)s %(levelname)s:%(message)s',
+    encoding="UTF-8",
+)
+
+DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}'
 db = Database(DATABASE_URL)
 
 app = FastAPI()
@@ -38,7 +43,7 @@ async def start_db():
         database=POSTGRES_DB,
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD,
-        host='127.0.0.1'
+        host='postgres'
     )
     async with engine:
         async with engine.acquire() as conn:
@@ -60,7 +65,7 @@ async def shutdown_event():
 
 @app.get('/check/')
 async def check(str_1: str, str_2: str):
-    redis = await aioredis.from_url('redis://localhost', password=REDIS_PASSWORD)
+    redis = await aioredis.from_url('redis://redis', password=REDIS_PASSWORD)
     anagram = is_anagram(str_1, str_2)
     if anagram:
         await redis.incr('anagram_counter', 1)
@@ -175,7 +180,8 @@ async def endpoint_delete(endpoint_id: int):
 @app.get('/devices/select/')
 async def devices_select():
     sub_query = sa.select([devices.c.id]).join(endpoints, devices.c.id == endpoints.c.device_id).subquery()
-    query = sa.select(devices.c.dev_type, sa.func.count(devices.c.dev_type).label('count')).filter(devices.c.id.not_in(sub_query)).group_by(devices.c.dev_type)
+    query = sa.select(devices.c.dev_type, sa.func.count(devices.c.dev_type).label('count')).filter(
+        devices.c.id.not_in(sub_query)).group_by(devices.c.dev_type)
     dev_select = await db.fetch_all(query)
 
     resp = []

@@ -1,36 +1,13 @@
-import aiopg
-import logging
-import os
 from dotenv import load_dotenv
 import random
 import secrets
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from aiopg.sa import create_engine
 from models import devices, endpoints
 
 
-# Configure logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename='pg_db.log',
-    format='%(asctime)s %(levelname)s:%(message)s',
-    encoding="UTF-8",
-)
-
 load_dotenv()
-# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
-# POSTGRES_DB = os.getenv('POSTGRES_DB')
-# POSTGRES_USER = os.getenv('POSTGRES_USER')
-# POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
-# dsn = f"dbname={POSTGRES_DB} user={POSTGRES_USER} password={POSTGRES_PASSWORD} host=localhost"
 
 dev_type_list = ['emeter', 'zigbee', 'lora', 'gsm']
-
-# SQLALCHEMY_DATABASE_URL = f"postgresql+aiopg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost/{POSTGRES_DB}"
-
-# Base = declarative_base()
 
 
 async def create_db(conn):
