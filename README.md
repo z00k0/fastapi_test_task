@@ -22,7 +22,7 @@ GET запрос к /devices/select/ выдает JSON, согласно зад�
 
 `git clone git@github.com:z00k0/fastapi_test_task.git`
 
-Для запуска проекта необходимо создать файл `.env`
+Для запуска необходимо создать файл `.env` в папке проекта.
 Содержимое файла:
 ```
 REDIS_PASSWORD=Q1w2e3r4
@@ -32,7 +32,8 @@ POSTGRES_PASSWORD=db_password
 POSTGRES_SERVER=postgres
 LOGGING_LEVEL=WARN
 ```
-Запуск проетка
+
+Запуск проекта
 
 `docker-compose build`
 
