@@ -8,3 +8,7 @@ def resp_to_dict(row):
     _endpoint = {'device_id': _device, 'id': _id, 'comment': comment}
 
     return _endpoint
+
+
+def is_anagram(str_1: str, str_2: str) -> bool:
+    return sorted(str_1) == sorted(str_2)

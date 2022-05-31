@@ -1,11 +1,23 @@
+import os
+
+from aiopg.sa import create_engine
+from databases import Database
 from dotenv import load_dotenv
 import random
 import secrets
 
-from models import devices, endpoints
+from app.models import devices, endpoints
 
 
 load_dotenv()
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_SERVER = os.getenv('POSTGRES_SERVER')
+
+DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}'
+db = Database(DATABASE_URL)
 
 dev_type_list = ['emeter', 'zigbee', 'lora', 'gsm']
 
@@ -58,6 +70,20 @@ async def create_db(conn):
         ALTER TABLE endpoints OWNER TO postgres;
         """
     )
+
+
+async def start_db():
+    engine = await create_engine(
+        database=POSTGRES_DB,
+        user=POSTGRES_USER,
+        password=POSTGRES_PASSWORD,
+        host='postgres'
+    )
+    async with engine:
+        async with engine.acquire() as conn:
+            await create_db(conn)
+            await fill_devices(conn)
+            await fill_endpoints(conn)
 
 
 async def fill_devices(conn):
