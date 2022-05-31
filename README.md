@@ -17,16 +17,13 @@ Test task with FastAPI, aioredis, aiopg
 4. В базе данных получить список всех устройств, которые не привязаны к endpoint. Вернуть количество, сгруппированное по типам устройств.
 
 GET запрос к /devices/select/ выдает JSON, согласно заданию
-<<<<<<< HEAD
-=======
-
 
 Клонирование проекта:
 
 `git clone git@github.com:z00k0/fastapi_test_task.git`
 
 Для запуска необходимо создать файл `.env` в папке проекта.
-Содержимое файла:
+Для корректной работы файл должен содержать:
 ```
 REDIS_PASSWORD=Q1w2e3r4
 POSTGRES_DB=fastapi_db
@@ -43,4 +40,4 @@ LOGGING_LEVEL=WARN
 `docker-compose up -d`
 
 Приложение доступно по адресу [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
->>>>>>> 47f72027a7aeb244008e42601808247314023a5d
+
