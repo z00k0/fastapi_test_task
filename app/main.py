@@ -1,6 +1,5 @@
 import logging
 import os
-from databases import Database
 from fastapi import FastAPI, status
 from dotenv import load_dotenv
 
@@ -25,9 +24,6 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s:%(message)s',
     encoding="UTF-8",
 )
-
-# DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/{POSTGRES_DB}'
-# db = Database(DATABASE_URL)
 
 app = FastAPI()
 
